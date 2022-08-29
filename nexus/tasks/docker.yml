@@ -1,0 +1,104 @@
+
+- name: copy docker deb file to server
+  copy:
+    src: "{{ item }}"
+    dest: /root/
+  loop:
+    - "{{ NEXUS }}/files/docker-ce_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "{{ NEXUS }}/files/docker-ce-cli_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "{{ NEXUS }}/files/containerd.io_1.6.7-1_amd64.deb"
+    - "{{ NEXUS }}/files/docker-compose-plugin_2.6.0_ubuntu-focal_amd64.deb"
+    - "{{ NEXUS }}/files/docker-ce-rootless-extras_20.10.17_3-0_ubuntu-focal_amd64.deb "
+    - "{{ NEXUS }}/files/docker-scan-plugin_0.17.0_ubuntu-focal_amd64.deb"
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: install docker deb pakages
+  apt:
+    deb: "{{ item }}"
+    state: present
+  with_items:
+    - "/root/docker-ce_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "/root/docker-ce-cli_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "/root/containerd.io_1.6.7-1_amd64.deb"
+    - "/root/docker-compose-plugin_2.6.0_ubuntu-focal_amd64.deb"
+    - "/root/docker-ce-rootless-extras_20.10.17_3-0_ubuntu-focal_amd64.deb "
+    - "/root/docker-scan-plugin_0.17.0_ubuntu-focal_amd64.deb" 
+  when: ansible_distribution == "Ubuntu"
+
+
+
+- name: Creates directory for daemon docker
+  file:
+    path: /etc/docker/
+    state: directory
+
+
+- name: Creates daemon.json file for docker
+  file:
+    path: /etc/docker/daemon.json
+    state: touch
+
+
+- name: enable service docker
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - docker
+    - containerd
+
+- name: start service docker
+  systemd:
+    state: started
+    name: "{{ item }}"
+  with_items:
+    - docker
+    - containerd
+
+
+- name: add group docker
+  group:
+    name: docker
+    state: present
+
+- name: usermod docker
+  user:
+    name: administrator
+    groups: [docker]
+    append: yes
+
+
+
+- name: get users with flag
+  shell: cat "{{ dockerFileDirectory }}/docker/files/tarList"
+  register: tarList
+  delegate_to: localhost
+
+
+- name: copy docker rpm file to server
+  copy:
+    src: "{{ dockerFileDirectory }}/docker/files/{{ item }}"
+    dest: /root/
+  loop: "{{ tarList.stdout_lines }}"
+
+
+- name: load docker images 
+  shell: docker load < /root/{{ item }}
+  loop: "{{ tarList.stdout_lines }}"
+
+
+- name: load docker images 
+  shell: rm -rf /root/*.tar
+
+
+- name: load docker images 
+  shell: rm -rf /root/*.deb
+  when: ansible_distribution == "Ubuntu"
+
+
+- name: Reboot
+  reboot:
+    reboot_timeout: 180
+    pre_reboot_delay: 10
+    post_reboot_delay: 30

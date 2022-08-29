@@ -1,0 +1,5 @@
+---
+# vars file for nexus
+NEXUS: /home/administrator/ansible/nexus/nexus
+# JAVA_TAR: $PWD
+JAVA_DIRECTORY: /usr/java

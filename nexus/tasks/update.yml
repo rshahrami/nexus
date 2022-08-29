@@ -1,0 +1,62 @@
+---
+- name: upgrade all packages
+  yum:
+    name: '*'
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+
+- name: Upgrade debian family.
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update all packages to their latest version
+  apt:
+    name: '*'
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update packages to latest version.
+  apt:
+    upgrade: dist
+    force_apt_get: yes   
+  when: ansible_distribution == "Ubuntu"
+
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: latest
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+
+- name: update hostname
+  hostname:
+    name: "{{ new_hostname }}"
+
+
+- name: Reboot
+  reboot:
+    reboot_timeout: 180
+    pre_reboot_delay: 10
+    post_reboot_delay: 20
+
+- name: Update all packages to their latest version
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - firewalld
+    # - conntrack
+  when: ansible_distribution == "Ubuntu"
+
+
+
