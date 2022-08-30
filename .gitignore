@@ -1,3 +1,4 @@
 nexus/files/*.tar.gz
+nexus/files/*.tar
 
 nexus-env

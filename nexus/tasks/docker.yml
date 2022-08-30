@@ -48,6 +48,7 @@
     - docker
     - containerd
 
+
 - name: start service docker
   systemd:
     state: started
@@ -62,6 +63,7 @@
     name: docker
     state: present
 
+
 - name: usermod docker
   user:
     name: administrator
@@ -69,30 +71,24 @@
     append: yes
 
 
-
-- name: get users with flag
-  shell: cat "{{ dockerFileDirectory }}/docker/files/tarList"
-  register: tarList
-  delegate_to: localhost
-
-
-- name: copy docker rpm file to server
+- name: copy docker deb file to server
   copy:
-    src: "{{ dockerFileDirectory }}/docker/files/{{ item }}"
+    src: "{{ item }}"
     dest: /root/
-  loop: "{{ tarList.stdout_lines }}"
+  loop:
+    - "{{ NEXUS }}/files/sonatype-nexus3-3.41.1.tar"
+  when: ansible_distribution == "Ubuntu"
 
 
 - name: load docker images 
-  shell: docker load < /root/{{ item }}
-  loop: "{{ tarList.stdout_lines }}"
+  shell: docker load < /root/sonatype-nexus3-3.41.1.tar
 
 
-- name: load docker images 
+- name: remove all tar file 
   shell: rm -rf /root/*.tar
 
 
-- name: load docker images 
+- name: remove all deb file
   shell: rm -rf /root/*.deb
   when: ansible_distribution == "Ubuntu"
 
