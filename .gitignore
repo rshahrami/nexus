@@ -1,3 +1,7 @@
+docker-nexus/.terraform*
+docker-nexus/terraform.tfstate.backup
+docker-nexus/terraform.tfstate
+
 nexus/files/*.tar.gz
 nexus/files/*.tar
 
