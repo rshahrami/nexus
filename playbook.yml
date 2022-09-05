@@ -1,0 +1,7 @@
+---
+- hosts: gluster-all
+  remote_user: ansible
+  become: true
+  become_method: sudo
+  roles:
+  - nexus

@@ -1,5 +1,2 @@
-[nodes_kuber]
-kuber-master ansible_user=root new_hostname=kuber-master
-kuber-worker1 ansible_user=root new_hostname=kuber-worker1
-kuber-worker2 ansible_user=root new_hostname=kuber-worker2
-kuber-worker3 ansible_user=root new_hostname=kuber-worker3
+[nexus]
+nexus ansible_user=root new_hostname=nexus
