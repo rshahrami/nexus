@@ -14,7 +14,7 @@ variable "remote_port" {
   type    = number
 }
 
-variable "nginx_version" {
+variable "image_version" {
   type    = string
 }
 
@@ -57,7 +57,6 @@ variable "host_path" {
 variable "read_only" {
   type    = bool
 }
-
 
 variable "container_network" {
   type = object({

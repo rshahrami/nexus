@@ -1,15 +1,16 @@
 
-resource "docker_image" "nginx" {
-  name         = "nginx:${var.nginx_version}"
+resource "docker_image" "nexus" {
+  name         = "sonatype/nexus3:${var.image_version}"
   keep_locally = var.keep_locally
   force_remove = var.force_remove
 }
 
-resource "docker_container" "nginx" {
-  image     = docker_image.nginx.name
+resource "docker_container" "nexus" {
+  image     = docker_image.nexus.name
   hostname  = var.container_hostname
   name      = var.container_name
   restart   = var.container_restart
+  # env = [ "INSTALL4J_ADD_VM_PARAMS=-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m -Djava.util.prefs.userRoot=/some-other-dir" ]
   ports {
     internal = var.container_port_internal
     external = var.container_port_external
