@@ -7,7 +7,7 @@
 
 - name: Unarchive a java file that is already on the remote machine
   unarchive:
-    src: "{{ NEXUS }}/files/jdk-8u221-linux-x64.tar.gz"
+    src: "{{ playbook_dir }}/files/jdk-8u221-linux-x64.tar.gz"
     dest: "{{ JAVA_DIRECTORY }}"
     remote_src: no
 

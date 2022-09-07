@@ -4,12 +4,12 @@
     src: "{{ item }}"
     dest: /root/
   loop:
-    - "{{ NEXUS }}/files/docker-ce_20.10.17_3-0_ubuntu-focal_amd64.deb"
-    - "{{ NEXUS }}/files/docker-ce-cli_20.10.17_3-0_ubuntu-focal_amd64.deb"
-    - "{{ NEXUS }}/files/containerd.io_1.6.7-1_amd64.deb"
-    - "{{ NEXUS }}/files/docker-compose-plugin_2.6.0_ubuntu-focal_amd64.deb"
-    - "{{ NEXUS }}/files/docker-ce-rootless-extras_20.10.17_3-0_ubuntu-focal_amd64.deb "
-    - "{{ NEXUS }}/files/docker-scan-plugin_0.17.0_ubuntu-focal_amd64.deb"
+    - "{{ playbook_dir }}/nexus-role/files/docker-ce_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "{{ playbook_dir }}/nexus-role/files/docker-ce-cli_20.10.17_3-0_ubuntu-focal_amd64.deb"
+    - "{{ playbook_dir }}/nexus-role/files/containerd.io_1.6.7-1_amd64.deb"
+    - "{{ playbook_dir }}/nexus-role/files/docker-compose-plugin_2.6.0_ubuntu-focal_amd64.deb"
+    - "{{ playbook_dir }}/nexus-role/files/docker-ce-rootless-extras_20.10.17_3-0_ubuntu-focal_amd64.deb "
+    - "{{ playbook_dir }}/nexus-role/files/docker-scan-plugin_0.17.0_ubuntu-focal_amd64.deb"
   when: ansible_distribution == "Ubuntu"
 
 
@@ -69,22 +69,6 @@
     name: administrator
     groups: [docker]
     append: yes
-
-
-- name: copy docker file to server
-  copy:
-    src: "{{ item }}"
-    dest: /root/
-  loop:
-    - "{{ NEXUS }}/files/sonatype-nexus3-3.41.1.tar"
-    
-
-- name: load docker images 
-  shell: docker load < /root/sonatype-nexus3-3.41.1.tar
-
-
-- name: remove all tar file 
-  shell: rm -rf /root/*.tar
 
 
 - name: remove all deb file

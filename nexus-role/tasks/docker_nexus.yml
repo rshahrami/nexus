@@ -1,0 +1,14 @@
+- name: copy docker file to server
+  copy:
+    src: "{{ item }}"
+    dest: /root/
+  loop:
+    - "{{ playbook_dir }}/nexus-role/files/sonatype-nexus3-3.41.1.tar"
+    
+
+- name: load docker images 
+  shell: docker load < /root/sonatype-nexus3-3.41.1.tar
+
+
+- name: remove all tar file 
+  shell: rm -rf /root/*.tar
