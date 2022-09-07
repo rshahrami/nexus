@@ -3,7 +3,7 @@
     src: "{{ item }}"
     dest: /root/
   loop:
-    - "{{ playbook_dir }}/nexus-role/files/sonatype-nexus3-3.41.1.tar"
+    - "{{ playbook_dir }}/nexus-role/files/sonatype-nexus3-{{ NEXUS_VERSION }}.tar"
     
 
 - name: load docker images 

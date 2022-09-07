@@ -76,6 +76,11 @@
   when: ansible_distribution == "Ubuntu"
 
 
+- name: remove all rpm file
+  shell: rm -rf /root/*.rpm
+  when: ansible_distribution == "centos"
+
+
 - name: Reboot
   reboot:
     reboot_timeout: 180

@@ -1,0 +1,9 @@
+#if not use terraform file:
+set nexus version in ansible variable file in nexus-role/file/ directory. fir example
+#NEXUS_VERSION: 3.41.1
+
+download of latest version package of docker install, java and nexus docker image . run belowe bash script code for download files 
+
+bash download.sh
+
+

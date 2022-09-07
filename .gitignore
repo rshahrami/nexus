@@ -4,5 +4,7 @@ docker-nexus/terraform.tfstate
 
 nexus-role/files/*.tar.gz
 nexus-role/files/*.tar
+nexus-role/files/*.deb
+nexus-role/files/*.rpm
 
 nexus-env
