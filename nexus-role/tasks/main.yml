@@ -11,3 +11,8 @@
 
 - include: terraform.yml
   tags: terraform
+
+- include: docker_nexus.yml
+  tags: docker_nexus
+
+  
