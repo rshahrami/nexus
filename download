@@ -1,0 +1,52 @@
+#!/bin/bash
+
+distribute=jammy
+architecture=amd64
+
+package_url=https://download.docker.com/linux/ubuntu/dists/$distribute
+JAVA_URL=https://files-cdn.liferay.com/mirrors/download.oracle.com/otn-pub/java/jdk/8u221-b11/jdk-8u221-linux-x64.tar.gz  
+nexus_version=$(cat $PWD/nexus-role/vars/main.yml | grep -i version | cut -d ":" -f 2 | sed -e 's/^[[:space:]]*//')
+
+
+echo "INFO: Download all package list for docker."
+## download all install docker package
+wget $package_url/stable/binary-$architecture/Packages -O packages
+cat packages | grep Package | cut -d ":" -f 2 | cut -d " " -f 2 | uniq > packages_name
+
+
+while read line;
+do  
+    command_get_list_of_docker_package=$(cat packages | grep Filename | cut -d ":" -f 2 | cut -d " " -f 2 | cut -d "/" -f 6 | grep $line | tail -n1)
+    sudo rm -rf file_list_of_docker_package
+    echo $command_get_list_of_docker_package >> file_list_of_docker_package
+
+    if [ -f $PWD/nexus-role/files/$command_get_list_of_docker_package ]; then
+        echo "INFO: $line package exist."
+    else
+        echo "INFO: downloading $line package."
+        curl -o $PWD/nexus-role/files/$command_get_list_of_docker_package $package_url/pool/stable/$architecture/$command_get_list_of_docker_package
+    fi   
+done < packages_name
+
+sudo rm -rf package*
+
+## download nexus3 docker images
+if [ -f $PWD/nexus-role/files/python-3.7.tar ]; then
+    echo "INFO: the python-3.7.tar file exist."
+else
+    docker pull python:3.7
+    docker save python:3.7 > $PWD/nexus-role/files/python-3.7.tar
+fi
+
+
+# docker pull sonatype/nexus3:$nexus_version
+# docker save sonatype/nexus3:$nexus_version > $PWD/nexus-role/files/sonatype-nexus3-$nexus_version.tar
+
+
+## download java
+
+if [ -f $PWD/nexus-role/files/jdk-8u221-linux-x64.tar.gz ]; then
+    echo "INFO: the jdk-8u221-linux-x64.tar.gz file exist."
+else
+    curl -o $PWD/nexus-role/files/jdk-8u221-linux-x64.tar.gz $JAVA_URL
+fi
