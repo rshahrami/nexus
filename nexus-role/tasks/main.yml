@@ -1,10 +1,10 @@
 ---
 # tasks file for nexus
-- include: update.yml
-  tags: update
+# - include: update.yml
+#   tags: update
 
-- include: java.yml
-  tags: java
+# - include: java.yml
+#   tags: java
 
 - include: docker.yml
   tags: docker

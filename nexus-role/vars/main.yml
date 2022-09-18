@@ -4,4 +4,6 @@ NEXUS: /home/administrator/ansible/nexus/nexus
 # JAVA_TAR: $PWD
 JAVA_DIRECTORY: /usr/java
 
+DEB_PACKAGE_DIR: /home/administrator
+
 NEXUS_VERSION: 3.41.1

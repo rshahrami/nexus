@@ -1,6 +1,6 @@
 
 - name: get users with flag
-  shell: cat "{{ playbook_dir }}/file_list_of_docker_package"
+  shell: cat "{{ playbook_dir }}/file_list_of_docker_package_sort"
   register: debdocker
   delegate_to: localhost
 
@@ -8,7 +8,10 @@
 - name: copy docker rpm file to server
   copy:
     src: "{{ playbook_dir }}/nexus-role/files/{{ item }}"
-    dest: /root/
+    dest: "{{ DEB_PACKAGE_DIR }}/"
+    owner: administrator
+    group: administrator
+    mode: '0644'
   loop: "{{ debdocker.stdout_lines }}"
   when: ansible_distribution == "Ubuntu"
 
@@ -16,7 +19,7 @@
 
 - name: install docker deb pakages
   apt:
-    deb: "/root/{{ item }}"
+    deb: "{{ DEB_PACKAGE_DIR }}/{{ item }}"
     state: present
   loop: "{{ debdocker.stdout_lines }}" 
   when: ansible_distribution == "Ubuntu"
@@ -67,11 +70,11 @@
 
 
 - name: remove all deb file
-  shell: rm -rf /root/*.deb
+  shell: rm -rf {{ DEB_PACKAGE_DIR }}/*.deb
   when: ansible_distribution == "Ubuntu"
 
 - name: remove all rpm file
-  shell: rm -rf /root/*.rpm
+  shell: rm -rf {{ DEB_PACKAGE_DIR }}/*.rpm
   when: ansible_distribution == "centos"
 
 

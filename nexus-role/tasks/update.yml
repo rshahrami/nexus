@@ -6,12 +6,6 @@
   when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
 
 
-- name: Update all packages to their latest version
-  apt:
-    name: '*'
-    state: latest
-  when: ansible_distribution == "Ubuntu"
-
 
 - name: Upgrade debian family.
   apt:
@@ -19,6 +13,12 @@
     force_apt_get: yes
     cache_valid_time: 3600
   when: ansible_distribution == "Ubuntu"
+
+# - name: Update all packages to their latest version
+#   apt:
+#     name: '*'
+#     state: latest
+#   when: ansible_distribution == "Ubuntu"
 
 
 - name: Update packages to latest version.

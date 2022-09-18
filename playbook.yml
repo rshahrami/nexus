@@ -1,7 +1,8 @@
 ---
-- hosts: gluster-all
-  remote_user: ansible
+- hosts: docker
+  remote_user: root
   become: true
+  # become_user: root
   become_method: sudo
   roles:
   - nexus-role

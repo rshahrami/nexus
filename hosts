@@ -1,2 +1,2 @@
-[nexus]
-nexus ansible_user=root new_hostname=nexus
+[docker]
+docker new_hostname=docker

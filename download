@@ -11,13 +11,18 @@ nexus_version=$(cat $PWD/nexus-role/vars/main.yml | grep -i version | cut -d ":"
 echo "INFO: Download all package list for docker."
 ## download all install docker package
 wget $package_url/stable/binary-$architecture/Packages -O packages
-cat packages | grep Package | cut -d ":" -f 2 | cut -d " " -f 2 | uniq > packages_name
 
+if [ ! $? -eq 0 ]; then
+    echo "ERROR: Unable to download the package."
+    exit 1
+fi
+
+cat packages | grep Package | cut -d ":" -f 2 | cut -d " " -f 2 | uniq > packages_name
+sudo rm -rf file_list_of_docker_package
 
 while read line;
 do  
     command_get_list_of_docker_package=$(cat packages | grep Filename | cut -d ":" -f 2 | cut -d " " -f 2 | cut -d "/" -f 6 | grep $line | tail -n1)
-    sudo rm -rf file_list_of_docker_package
     echo $command_get_list_of_docker_package >> file_list_of_docker_package
 
     if [ -f $PWD/nexus-role/files/$command_get_list_of_docker_package ]; then
@@ -28,6 +33,8 @@ do
     fi   
 done < packages_name
 
+cat file_list_of_docker_package | sort > file_list_of_docker_package_sort
+sudo rm -rf file_list_of_docker_package
 sudo rm -rf package*
 
 ## download nexus3 docker images
@@ -43,8 +50,7 @@ fi
 # docker save sonatype/nexus3:$nexus_version > $PWD/nexus-role/files/sonatype-nexus3-$nexus_version.tar
 
 
-## download java
-
+# download java
 if [ -f $PWD/nexus-role/files/jdk-8u221-linux-x64.tar.gz ]; then
     echo "INFO: the jdk-8u221-linux-x64.tar.gz file exist."
 else
